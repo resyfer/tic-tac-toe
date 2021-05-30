@@ -1,0 +1,117 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overflow: hidden;
+}
+
+#player-turn {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  font-size: 5vh;
+  color: #4722df;
+}
+
+#tic-tac-toe-container {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  height: 60%;
+  aspect-ratio: 1/1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -ms-flex-line-pack: justify;
+      align-content: space-between;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  font-family: 'Baloo Tammudu 2', cursive;
+}
+
+#tic-tac-toe-container .box {
+  position: relative;
+  height: 32%;
+  aspect-ratio: 1/1;
+  border: 0.3vh solid #4722df;
+  border-radius: 3vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  cursor: pointer;
+}
+
+#tic-tac-toe-container .box .box-content {
+  position: relative;
+  font-size: 22.5vh;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  line-height: 140%;
+}
+
+#game-over {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 100%;
+  width: 100%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  background-color: white;
+  text-align: center;
+  font-size: 7vh;
+  z-index: 5;
+  color: #4722df;
+  display: none;
+  -webkit-transition-duration: 0.3s;
+          transition-duration: 0.3s;
+}
+
+#game-over div#player-winner {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+#game-over div#play-again {
+  position: absolute;
+  top: 75%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  background-color: #4722df;
+  color: white;
+  height: 10vh;
+  aspect-ratio: 4/1;
+  border-radius: 5vh;
+  font-size: 4vh;
+  line-height: 10vh;
+  cursor: pointer;
+}
+
+.x {
+  color: blue;
+}
+
+.o {
+  color: red;
+}
+/*# sourceMappingURL=index.css.map */
