@@ -40,6 +40,7 @@ for(let i = 0; i<3; i++) {
 function turnUpdate(i, j) {
 
   if(board[i][j] != 0) {
+    console.log(board[i][j]);
     alert('Incorrect choice, please pick a different square');
     return;
   }
@@ -57,6 +58,7 @@ function turnUpdate(i, j) {
   for(let i = 1; i<choices.length; i++) {
     if(gameWinCondition(i)) {
       gameWin(i);
+      return;
     }
   }
 

@@ -63,6 +63,7 @@ body {
   width: 100%;
   text-align: center;
   line-height: 140%;
+  overflow: hidden;
 }
 
 #game-over {
