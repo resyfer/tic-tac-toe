@@ -1,0 +1,98 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overflow: hidden;
+}
+
+#player-turn {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 5vh;
+  color: #4722df;
+}
+
+#tic-tac-toe-container {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 60%;
+  aspect-ratio: 1/1;
+  display: flex;
+  justify-content: space-between;
+  align-content: space-between;
+  flex-wrap: wrap;
+  font-family: 'Baloo Tammudu 2', cursive;
+  
+  .box {
+    position: relative;
+    height: 32%;
+    aspect-ratio: 1/1;
+    border: 0.3vh solid #4722df;
+    border-radius: 3vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    .box-content {
+      position: relative;
+      font-size: 22.5vh;
+      height: 100%;
+      width: 100%;
+      text-align: center;
+      line-height: 140%;
+    }
+  }
+}
+
+#game-over {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 100%;
+  width: 100%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  text-align: center;
+  font-size: 7vh;
+  z-index: 5;
+  color: #4722df;
+  display: none;
+  transition-duration: 0.3s;
+
+  div#player-winner {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  div#play-again {
+    position: absolute;
+    top: 75%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #4722df;
+    color: white;
+    height: 10vh;
+    aspect-ratio: 4/1;
+    border-radius: 5vh;
+    font-size: 4vh;
+    line-height: 10vh;
+    cursor: pointer;
+  }
+}
+
+.x {
+  color: blue;
+}
+
+.o {
+  color: red;
+}
