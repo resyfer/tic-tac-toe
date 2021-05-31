@@ -1,7 +1,7 @@
 var choices = ['', 'X', 'O']; //Available choice...Index 0 kept empty to match index with playerTurn
 
 var playerTurn = 1; //First Player at start
-
+var computable = true;
 //A board representing the game state. 0 is empty, 1 is X, 2 is O
 var board =
 [
@@ -40,6 +40,10 @@ for(let i = 0; i<3; i++) {
   for(let j = 0; j<3; j++) {
     boardElem[i][j].addEventListener('click', ()=> {
       turnUpdate(i, j);
+      if(true){
+      let a = compute();
+      turnUpdate(a[0],a[1]);
+      }
     })
   }
 }
@@ -49,13 +53,14 @@ function turnUpdate(i, j) {
   //Incorrect choice if box is already filled
   if(board[i][j] != 0) {
     alert('Incorrect choice, please pick a different square');
+    computable = false;
     return;
   }
-
+  computable = true;
   board[i][j] = playerTurn; //fills the matrix with the player number to mark their choices
   
   boardElem[i][j].innerHTML = choices[playerTurn]; // Adds X or O depending on the player's turn
-
+  console.log(board);
   if(playerTurn == 1) {
     boardElem[i][j].classList.add('x'); //Adds class x to one marked X for distinct coloring
   } else {
@@ -65,12 +70,14 @@ function turnUpdate(i, j) {
   //Checks for win situtation for each player
   for(let i = 1; i<choices.length; i++) {
     if(gameWinCondition(i)) { //Checks if player i won
+      computable = false;
       gameWin(i); //Player i won
       return;
     }
   }
 
-  gameDraw(); //Checks for draw situation
+  if(gameDraw())
+    computable =  false; //Checks for draw situation
 
   playerTurn = (playerTurn % 2) + 1; //Change the player turn
   
@@ -158,11 +165,106 @@ function gameDraw() {
   if(count != 0) {
     gameOverScreen.style.display = "block";
     playerWinnerDisplay.innerHTML = "Players Draw!!!";
+    return true;
   }
+  return false;
 }
 
 //GameOver Screen for Win for player i
 function gameWin(i) {
   gameOverScreen.style.display = "block";
   playerWinnerDisplay.innerHTML = "Player " + i + " Wins!!!";
+}
+
+//Computer
+
+function compute(){
+  //record of empty boxes
+  let record = [];
+    for(let i = 0; i<3; i++)
+      for(let j = 0; j<3; j++)
+        if(board[i][j]==0)
+          record.push([i, j]);
+  record = shuffle(record);
+
+  if(record.length == 8 &&
+    (board[0][0] != 0 ||
+      board[2][2] != 0 ||
+      board[0][2] != 0 ||
+      board[2][0] != 0
+      ))
+    return [1,1];
+
+  //check for next step
+  for(let player = 2; player>0; player--)
+    for(let i = 0; i<record.length; i++){
+        if(checkWin(record[i][0], record[i][1], player)){
+          board[record[i][0]][record[i][1]] = 0;
+          return(record[i]);
+        }
+        board[record[i][0]][record[i][1]] = 0;
+    }
+    
+    
+   //check for two steps
+  for(let player = 2; player>0; player--)
+    for(let i = 0; i<record.length; i++){
+        checkWin(record[i][0], record[i][1], player);
+          for(let j = 0; j<record.length; j++){
+            if(j!=i){
+              if(checkWin(record[j][0], record[j][1], player)){
+                board[record[i][0]][record[i][1]] = 0;
+                board[record[j][0]][record[j][1]] = 0;
+                if((Math.trunc(Math.random()*10))%2 == 0)
+                  return(record[i]);
+                else
+                  return(record[j]);
+              }
+            }
+            board[record[j][0]][record[j][1]] = 0; 
+        }
+        board[record[i][0]][record[i][1]] = 0;
+        
+    }
+
+
+  var choice = record[(Math.trunc(Math.random()*10))%record.length];
+  return choice;
+
+}
+
+
+
+function checkWin(i, j, player) {
+  if(board[i][j] != 0) {
+    return false;
+  }
+
+  board[i][j] = player; //fills the matrix with the player number to mark their choices
+
+  //Checks for win situtation for each player
+  if(gameWinCondition(player)){ //Checks if player i won
+
+    return true;
+  }
+
+  return false;
+}
+
+function shuffle(array) {
+  var currentIndex = array.length,  randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
 }
