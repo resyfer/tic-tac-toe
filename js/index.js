@@ -1,6 +1,7 @@
 var choices = ['', 'X', 'O']; //Available choice...Index 0 kept empty to match index with playerTurn
 
-var playerTurn = 1; //First Player at start
+var computer = 2
+var currentPlayer = 1; //First Player at start
 var computable = true;
 //A board representing the game state. 0 is empty, 1 is X, 2 is O
 var board =
@@ -22,9 +23,7 @@ var playerWinnerDisplay = document.getElementById('player-winner'); //Which play
 
 //Play again button with reload on click
 var playAgain = document.getElementById('play-again');
-playAgain.addEventListener('click', ()=> {
-  location.reload();
-})
+
 
 //Mapping the box elements as a 3*3 matrix for easier management
 var boardElem = [];
@@ -35,18 +34,31 @@ for(let i = 0; i<3; i++) {
   }
 }
 
+window.onload = function(){  
+  if(computable==true){
+  let a = compute();
+  turnUpdate(a[0],a[1]);
+  }
+} 
+
+
 //Adding on click event listeners to the boxes to progress the game
 for(let i = 0; i<3; i++) {
   for(let j = 0; j<3; j++) {
     boardElem[i][j].addEventListener('click', ()=> {
       turnUpdate(i, j);
-      if(true){
+      if(computable){
       let a = compute();
       turnUpdate(a[0],a[1]);
       }
     })
   }
 }
+
+playAgain.addEventListener('click', ()=> {
+  location.reload();
+})
+
 
 function turnUpdate(i, j) {
 
@@ -57,11 +69,11 @@ function turnUpdate(i, j) {
     return;
   }
   computable = true;
-  board[i][j] = playerTurn; //fills the matrix with the player number to mark their choices
+  board[i][j] = currentPlayer; //fills the matrix with the player number to mark their choices
   
-  boardElem[i][j].innerHTML = choices[playerTurn]; // Adds X or O depending on the player's turn
-  console.log(board);
-  if(playerTurn == 1) {
+  boardElem[i][j].innerHTML = choices[currentPlayer]; // Adds X or O depending on the player's turn
+
+  if(currentPlayer == 1) {
     boardElem[i][j].classList.add('x'); //Adds class x to one marked X for distinct coloring
   } else {
     boardElem[i][j].classList.add('o'); //Adds class o to one marked O for distinct coloring
@@ -79,9 +91,9 @@ function turnUpdate(i, j) {
   if(gameDraw())
     computable =  false; //Checks for draw situation
 
-  playerTurn = (playerTurn % 2) + 1; //Change the player turn
+  currentPlayer = getNextPlayer(); //Change the player turn
   
-  playerTurnDisplay.innerHTML = playerTurn; //Update player turn display
+  playerTurnDisplay.innerHTML = currentPlayer; //Update player turn display
 }
 
 /*
@@ -196,37 +208,59 @@ function compute(){
     return [1,1];
 
   //check for next step
-  for(let player = 2; player>0; player--)
     for(let i = 0; i<record.length; i++){
-        if(checkWin(record[i][0], record[i][1], player)){
+        if(checkWin(record[i][0], record[i][1], currentPlayer)){
           board[record[i][0]][record[i][1]] = 0;
           return(record[i]);
         }
         board[record[i][0]][record[i][1]] = 0;
     }
     
+    for(let i = 0; i<record.length; i++){
+      if(checkWin(record[i][0], record[i][1], getNextPlayer())){
+        board[record[i][0]][record[i][1]] = 0;
+        return(record[i]);
+      }
+      board[record[i][0]][record[i][1]] = 0;
+  }
     
    //check for two steps
-  for(let player = 2; player>0; player--)
-    for(let i = 0; i<record.length; i++){
-        checkWin(record[i][0], record[i][1], player);
-          for(let j = 0; j<record.length; j++){
-            if(j!=i){
-              if(checkWin(record[j][0], record[j][1], player)){
-                board[record[i][0]][record[i][1]] = 0;
-                board[record[j][0]][record[j][1]] = 0;
-                if((Math.trunc(Math.random()*10))%2 == 0)
-                  return(record[i]);
-                else
-                  return(record[j]);
-              }
+ 
+  for(let i = 0; i<record.length; i++){
+      checkWin(record[i][0], record[i][1], currentPlayer);
+        for(let j = 0; j<record.length; j++){
+          if(j!=i){
+            if(checkWin(record[j][0], record[j][1], currentPlayer)){
+              board[record[i][0]][record[i][1]] = 0;
+              board[record[j][0]][record[j][1]] = 0;
+              if((Math.trunc(Math.random()*10))%2 == 0)
+                return(record[i]);
+              else
+                return(record[j]);
             }
-            board[record[j][0]][record[j][1]] = 0; 
-        }
-        board[record[i][0]][record[i][1]] = 0;
-        
-    }
+          }
+          board[record[j][0]][record[j][1]] = 0; 
+      }
+      board[record[i][0]][record[i][1]] = 0;        
+  }
 
+  for(let i = 0; i<record.length; i++){
+    checkWin(record[i][0], record[i][1], getNextPlayer());
+      for(let j = 0; j<record.length; j++){
+        if(j!=i){
+          if(checkWin(record[j][0], record[j][1], getNextPlayer())){
+            board[record[i][0]][record[i][1]] = 0;
+            board[record[j][0]][record[j][1]] = 0;
+            if((Math.trunc(Math.random()*10))%2 == 0)
+              return(record[i]);
+            else
+              return(record[j]);
+          }
+        }
+        board[record[j][0]][record[j][1]] = 0; 
+    }
+    board[record[i][0]][record[i][1]] = 0;        
+}
 
   var choice = record[(Math.trunc(Math.random()*10))%record.length];
   return choice;
@@ -242,13 +276,17 @@ function checkWin(i, j, player) {
 
   board[i][j] = player; //fills the matrix with the player number to mark their choices
 
-  //Checks for win situtation for each player
+  //Checks for win situation for each player
   if(gameWinCondition(player)){ //Checks if player i won
 
     return true;
   }
 
   return false;
+}
+
+function getNextPlayer(){
+  return (currentPlayer % 2) + 1;
 }
 
 function shuffle(array) {
