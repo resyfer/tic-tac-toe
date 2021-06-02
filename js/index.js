@@ -2,7 +2,7 @@ var choices = ['', 'X', 'O']; //Available choice...Index 0 kept empty to match i
 
 var computer = 2
 var currentPlayer = 1; //First Player at start
-var computable = true;
+var computable = false;
 //A board representing the game state. 0 is empty, 1 is X, 2 is O
 var board =
 [
@@ -208,59 +208,36 @@ function compute(){
     return [1,1];
 
   //check for next step
+  for(let i=0, player = currentPlayer;i<2; i++, player = getNextPlayer())
     for(let i = 0; i<record.length; i++){
-        if(checkWin(record[i][0], record[i][1], currentPlayer)){
+        if(checkWin(record[i][0], record[i][1], player)){
           board[record[i][0]][record[i][1]] = 0;
           return(record[i]);
         }
         board[record[i][0]][record[i][1]] = 0;
     }
     
-    for(let i = 0; i<record.length; i++){
-      if(checkWin(record[i][0], record[i][1], getNextPlayer())){
-        board[record[i][0]][record[i][1]] = 0;
-        return(record[i]);
-      }
-      board[record[i][0]][record[i][1]] = 0;
-  }
     
    //check for two steps
- 
-  for(let i = 0; i<record.length; i++){
-      checkWin(record[i][0], record[i][1], currentPlayer);
-        for(let j = 0; j<record.length; j++){
-          if(j!=i){
-            if(checkWin(record[j][0], record[j][1], currentPlayer)){
-              board[record[i][0]][record[i][1]] = 0;
-              board[record[j][0]][record[j][1]] = 0;
-              if((Math.trunc(Math.random()*10))%2 == 0)
-                return(record[i]);
-              else
-                return(record[j]);
+  for(let i=0, player = currentPlayer;i<2; i++, player = getNextPlayer())
+    for(let i = 0; i<record.length; i++){
+        checkWin(record[i][0], record[i][1], player);
+          for(let j = 0; j<record.length; j++){
+            if(j!=i){
+              if(checkWin(record[j][0], record[j][1], player)){
+                board[record[i][0]][record[i][1]] = 0;
+                board[record[j][0]][record[j][1]] = 0;
+                if((Math.trunc(Math.random()*10))%2 == 0)
+                  return(record[i]);
+                else
+                  return(record[j]);
+              }
             }
-          }
-          board[record[j][0]][record[j][1]] = 0; 
-      }
-      board[record[i][0]][record[i][1]] = 0;        
-  }
-
-  for(let i = 0; i<record.length; i++){
-    checkWin(record[i][0], record[i][1], getNextPlayer());
-      for(let j = 0; j<record.length; j++){
-        if(j!=i){
-          if(checkWin(record[j][0], record[j][1], getNextPlayer())){
-            board[record[i][0]][record[i][1]] = 0;
-            board[record[j][0]][record[j][1]] = 0;
-            if((Math.trunc(Math.random()*10))%2 == 0)
-              return(record[i]);
-            else
-              return(record[j]);
-          }
+            board[record[j][0]][record[j][1]] = 0; 
         }
-        board[record[j][0]][record[j][1]] = 0; 
+        board[record[i][0]][record[i][1]] = 0;        
     }
-    board[record[i][0]][record[i][1]] = 0;        
-}
+
 
   var choice = record[(Math.trunc(Math.random()*10))%record.length];
   return choice;
@@ -274,13 +251,13 @@ function checkWin(i, j, player) {
     return false;
   }
 
-  board[i][j] = player; //fills the matrix with the player number to mark their choices
+  //temporary board fill
+  board[i][j] = player;
 
-  //Checks for win situation for each player
-  if(gameWinCondition(player)){ //Checks if player i won
-
+  //Checks for win situation for player
+  if(gameWinCondition(player))
     return true;
-  }
+  
 
   return false;
 }
